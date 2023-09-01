@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Input.scss";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -7,9 +7,8 @@ import {
   deleteTodo,
   removeAllTodo,
 } from "./../actions/actionPerformer";
-import { MdOutlineModeEditOutline, MdOutlineCancel } from "react-icons/md";
-import { RiDeleteBin6Fill } from "react-icons/ri";
-import { BiSave } from "react-icons/bi";
+import { CgCalendarDates } from "react-icons/cg";
+import { GrStatusGoodSmall } from "react-icons/gr";
 
 const Input = () => {
   const dispatch = useDispatch();
@@ -18,13 +17,40 @@ const Input = () => {
 
   const [editedData, setEditedData] = useState("");
 
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(null);
 
   const [inputTxt, setInputTxt] = useState("");
 
   const [errorMsg, setErrorMsg] = useState("Add new");
 
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [filterType, setFilterType] = useState(null);
+
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    // console.log("filter type", filterType)
+    if (filterType === "Done" || filterType === "Pending") {
+      // console.log("if part")
+      const filteredList = list.filter((elem) => elem.status === filterType);
+      setFilteredData(filteredList);
+    } else {
+      // console.log("else")
+      setFilteredData(list);
+    }
+  }, [list, filterType]);
+
+  // console.log("List", list);
+  // console.log("filteredData", filteredData);
+
+  useEffect(() => {
+    if (selectAll) {
+      setSelectedItems(list.map((elem) => elem.id));
+    } else {
+      setSelectedItems([]);
+    }
+  }, [selectAll, list]);
 
   const handleAddTask = () => {
     if (inputTxt) {
@@ -45,184 +71,303 @@ const Input = () => {
       setSelectedItems([...selectedItems, id]);
     }
   };
+
   return (
     <section className="">
-      <div className="container h-100">
+      <div className="">
         <div className="">
           <div className="col">
             <div
               className="card"
               id="list1"
-              style={{ backgroundColor: "white" }}
+              style={{ backgroundColor: "#323232" ,borderColor:"#616464" , color:"white" }}
             >
               <div className="card-body py-4 px-4 px-md-5">
-                <div className="pb-2">
-                  <div className="card" style={{ backgroundColor: "white" }}>
+                <div className="">
+                  <div className="card" style={{ backgroundColor: "#323232",borderColor:"#616464"}}>
                     <div className="card-body">
-                      <div className="d-flex flex-row align-items-center">
+                      <div className="d-flex flex-row align-items-center text-light">
                         <input
-                          style={{ backgroundColor: "white", color: "black" }}
+                          // style={{ backgroundColor: "#323232", color: "red"}}
                           type="text"
                           name="inputTxt"
                           placeholder={errorMsg}
                           value={inputTxt}
                           onChange={(e) => setInputTxt(e.target.value)}
-                          className="form-control form-control-lg"
+                          className="main-input"
                           id="exampleFormControlInput1"
                         />
 
-                        <div>
-                          <button
-                            type="button"
-                            onClick={handleAddTask}
-                            className="btn btn-primary"
-                          >
-                            Add
-                          </button>
-                        </div>
+                        <button
+                          className="button"
+                          onClick={handleAddTask}
+                          type="button"
+                        >
+                          <span className="button__text">Add Todo</span>
+                          <span className="button__icon">
+                            <svg
+                              className="svg"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <line x1="12" x2="12" y1="5" y2="19"></line>
+                              <line x1="5" x2="19" y1="12" y2="12"></line>
+                            </svg>
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <hr className="my-4" />
+                <div className="form-check d-flex justify-content-between mb-2">
+                  <span className="d-flex flex-row">
+                    <input
+                      className="form-check-input me-2"
+                      type="checkbox"
+                      value=""
+                      id="selectAllCheckbox"
+                      aria-label="..."
+                      checked={selectAll}
+                      onChange={() => setSelectAll(!selectAll)}
+                    />
 
-                <div className="d-flex justify-content-end align-items-center mb-4 pt-2 pb-3">
-                  <p className="small mb-0 me-2 text-muted">Filter</p>
-                  <select className="select">
-                    <option value="1">All</option>
-                    <option value="2">Completed</option>
-                    <option value="3">Active</option>
-                    <option value="4">Has due date</option>
-                  </select>
-                  <p className="small mb-0 ms-4 me-2 text-muted">Sort</p>
-                  <select className="select">
-                    <option value="1">Added date</option>
-                    <option value="2">Due date</option>
-                  </select>
-                </div>
-
-                {list.map((elem) => {
-                  return (
-                    <ul
-                      key={elem.id}
-                      className="list-group list-group-horizontal rounded-0  "
-                      style={{ borderBottom: "1px solid" }}
+                    <p className="small mb-0 me-2 text-light ">Select All</p>
+                    <button
+                      onClick={() => dispatch(removeAllTodo(selectedItems))}
+                      style={{
+                        height: "20px",
+                        width: "20px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      className="bin"
                     >
-                      <li className="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input me-0"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked1"
-                            aria-label="..."
-                            checked={selectedItems.includes(elem.id)}
-                            onChange={() => handleCheckboxChange(elem.id)}
-                          />
-                        </div>
-                      </li>
-                      <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                        {editMode && elem.id === editedData.id ? (
-                          <input
-                            type="text"
-                            name="inputTxt"
-                            placeholder="Edit..."
-                            value={
-                              editedData.id === elem.id
-                                ? editedData.data
-                                : elem.data
-                            }
-                            onChange={(e) => {
-                              if (editedData.id === elem.id) {
-                                setEditedData({
-                                  ...editedData,
-                                  data: e.target.value,
-                                });
-                              }
-                            }}
-                          />
-                        ) : (
-                          <p className="lead fw-normal mb-0">{elem.data}</p>
-                        )}
-                      </li>
-                      <li className="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
-                        {!editMode ? (
-                          <div className="d-flex flex-row justify-content-end mb-1">
-                            <a
-                              href="#!"
-                              className="text-info me-3"
-                              data-mdb-toggle="tooltip"
-                              title="Edit todo"
-                              onClick={() => {
-                                setEditMode(true);
-                                setEditedData(elem);
-                              }}
-                            >
-                              <MdOutlineModeEditOutline />
-                            </a>
-
-                            <a
-                              href="#!"
-                              className="text-danger ms-3"
-                              data-mdb-toggle="tooltip"
-                              title="Delete todo"
-                              onClick={() => dispatch(deleteTodo(elem.id))}
-                            >
-                              <RiDeleteBin6Fill />
-                            </a>
+                      🗑
+                    </button>
+                  </span>
+                  <span className="form-check d-flex justify-content-between align-items-center ">
+                    <p className="small mb-0 me-2 text-light">Filter</p>
+                    <select
+                      className="select"
+                      onChange={(e) => setFilterType(e.target.value)}
+                    >
+                      <option value="All">All</option>
+                      <option value="Done">Done</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                  </span>
+                </div>
+                <div className="output" style={{ height:"300px", overflow:"auto"}}>
+                  {filteredData.map((elem, index) => {
+                    return (
+                      <ul
+                        key={elem.id}
+                        className="list-group list-group-horizontal rounded-0  "
+                        style={{ borderBottom: "1px solid",paddingLeft:"6px", paddingRight:"6px"}}
+                      >
+                        <li className="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+                          <div className="form-check">
+                            <input
+                            
+                              className="form-check-input me-0"
+                              type="checkbox"
+                              value=""
+                              id="flexCheckChecked1"
+                              aria-label="..."
+                              checked={selectedItems.includes(elem.id)}
+                              onChange={() => handleCheckboxChange(elem.id)}
+                            />
                           </div>
-                        ) : (
-                          <>
-                            {" "}
+                        </li>
+                        <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                          {editMode === index && elem.id === editedData.id ? (
+                            <div className="input">
+                              <input
+                                className="inputttt input-alt"
+                                style={{ width: "100%", border: "0",  backgroundColor: "#e5e5e0", paddingRight:"100px"}}
+                                
+                                type="text"
+                                name="inputTxt"
+                                placeholder="Edit..."
+                                value={
+                                  editedData.id === elem.id
+                                    ? editedData.todo
+                                    : elem.todo
+                                }
+                                onChange={(e) => {
+                                  if (editedData.id === elem.id) {
+                                    setEditedData({
+                                      ...editedData,
+                                      todo: e.target.value,
+                                    });
+                                  }
+                                }}
+                              />
+                              <span className="input-border input-border-alt"></span>
+                              {editMode === index ? (
+                                <select
+                                  className="selectt"
+                                  value={editedData.status}
+                                  onChange={(e) => {
+                                    const newStatus = e.target.value;
+                                    setEditedData({
+                                      ...editedData,
+                                      status: newStatus,
+                                    });
+                                  }}
+                                >
+                                  <option value="Done">Done</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          ) : (
+                            <p className="lead text-light fw-normal mb-0">{elem.todo}</p>
+                          )}
+                        </li>
+                        <li className="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+                          {editMode === index ? (
+                            <>
+                              {" "}
+                              <div className="d-flex flex-row justify-content-end mb-1">
+                                <a
+                                  href="#!"
+                                  className="text-info me-3 fs-4"
+                                  data-mdb-toggle="tooltip"
+                                  title="Edit todo"
+                                  onClick={() => {
+                                    if (editedData.id === elem.id) {
+                                      dispatch(updateList(editedData));
+                                      setEditMode(false);
+                                    }
+                                  }}
+                                >
+                                  {" "}
+                                  <lord-icon
+                                    src="https://cdn.lordicon.com/jvihlqtw.json"
+                                    trigger="loop"
+                                    delay="3000"
+                                    colors="primary:#121331,secondary:#08a88a"
+                                    style={{
+                                      width: "40px",
+                                      height: "40px",
+                                      fontWeight: 900,
+                                    }}
+                                  ></lord-icon>
+                                </a>
+                                <a
+                                  href="#!"
+                                  className="text-danger ms-3 fs-4"
+                                  data-mdb-toggle="tooltip"
+                                  title="Delete todo"
+                                  onClick={() => {
+                                    setEditedData("");
+                                    setEditMode(false);
+                                  }}
+                                >
+                                  <lord-icon
+                                    src="https://cdn.lordicon.com/rivoakkk.json"
+                                    trigger="loop"
+                                    delay="3000"
+                                    colors="primary:#121331,secondary:#08a88a"
+                                    style={{
+                                      width: "40px",
+                                      height: "40px",
+                                      fontWeight: 900,
+                                    }}
+                                  ></lord-icon>
+                                </a>
+                              </div>
+                            </>
+                          ) : (
                             <div className="d-flex flex-row justify-content-end mb-1">
                               <a
                                 href="#!"
-                                className="text-info me-3"
+                                className="text-info me-3 fs-4"
                                 data-mdb-toggle="tooltip"
                                 title="Edit todo"
                                 onClick={() => {
-                                  if (editedData.id === elem.id) {
-                                    dispatch(updateList(editedData));
-                                    setEditMode(false);
-                                  }
+                                  setEditMode(index);
+                                  setEditedData(elem);
                                 }}
                               >
-                                {" "}
-                                <BiSave />{" "}
+                                <lord-icon
+                                  src="https://cdn.lordicon.com/wloilxuq.json"
+                                  trigger="loop"
+                                  delay="2000"
+                                  colors="primary:#121331,secondary:#08a88a"
+                                  style={{
+                                    width: "40px",
+                                    height: "40px",
+                                    fontWeight: 900,
+                                  }}
+                                ></lord-icon>
                               </a>
+
                               <a
                                 href="#!"
-                                className="text-danger ms-3"
+                                className="text-danger ms-3 fs-4"
                                 data-mdb-toggle="tooltip"
                                 title="Delete todo"
-                                onClick={() => {
-                                  setEditedData("");
-                                  setEditMode(false);
-                                }}
+                                onClick={() => dispatch(deleteTodo(elem.id))}
                               >
-                                <MdOutlineCancel />
+                                <lord-icon
+                                  src="https://cdn.lordicon.com/gsqxdxog.json"
+                                  trigger="loop"
+                                  delay="3000"
+                                  colors="primary:#121331,secondary:#08a88a"
+                                  style={{
+                                    width: "40px",
+                                    height: "40px",
+                                    fontWeight: 900,
+                                  }}
+                                ></lord-icon>
                               </a>
                             </div>
-                          </>
-                        )}
-                        <div className="text-end text-muted">
-                          <a
-                            href="#!"
-                            className="text-muted"
-                            data-mdb-toggle="tooltip"
-                            title="Created date"
-                          >
-                            <p className="small mb-0">
-                              <i className="fas fa-info-circle me-2"></i>
-                              {elem.date}
+                          )}
+                          <div className="text-end text-muted d-flex flex-row gap-5">
+                            {!editMode ? (
+                              <p
+                                className=" d-flex flex-row gap-2 align-items-center "
+                                style={{
+                                  color:
+                                    elem.status === "Pending"
+                                      ? "#bc1414"
+                                      : "#178f17",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                <GrStatusGoodSmall />
+                                {elem.status}
+                              </p>
+                            ) : (
+                              ""
+                            )}
+
+                            <p
+                              className=" d-flex flex-row gap-2 align-items-center text-light "
+                              style={{ fontSize: "14px" }}
+                            >
+                              <CgCalendarDates /> {elem.date}
                             </p>
-                          </a>
-                        </div>
-                      </li>
-                    </ul>
-                  );
-                })}
+                          </div>
+                        </li>
+                      </ul>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>

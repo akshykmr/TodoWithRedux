@@ -1,11 +1,11 @@
 export const addTodo = (data) =>{
 
-    var date = new Date();
-    var day = date.getDate();
+    var addedDate = new Date();
+    var day = addedDate.getDate();
     var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    var month = monthNames[date.getMonth()];
-    var year = date.getFullYear();
+    var month = monthNames[addedDate.getMonth()];
+    var year = addedDate.getFullYear();
     function getOrdinalSuffix(day) {
         if (day > 3 && day < 21) return 'th';
         switch (day % 10) {
@@ -24,8 +24,8 @@ export const addTodo = (data) =>{
         type : "ADDTODO",
         payload : {
             id : new Date().getTime().toString(),
-            data: data,
-            date:formattedDate
+            todo: data,
+            addedDate:formattedDate,
         }
     }
 };
@@ -35,7 +35,7 @@ export const updateList = (data) =>{
     return {
         type : "UPDATE",
         payload : {
-            data: data,
+            data: data
         }
     }
 };
@@ -47,8 +47,10 @@ export const deleteTodo = (id) =>{
     }
 };
 
-export const removeAllTodo = () =>{
+export const removeAllTodo = (id) =>{
+    // console.log(id)
     return {
-        type : "REMOVEALLTODO"
+        type : "REMOVEALLTODO",
+        id:id
     }
 };

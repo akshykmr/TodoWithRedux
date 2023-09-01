@@ -14,10 +14,11 @@
 }
 
 .mask-custom {
-  background: rgba(24, 24, 16, 0.2);
+  background: #323232;
+  color: white;
   border-radius: 2em;
   backdrop-filter: blur(25px);
-  border: 2px solid rgba(255, 255, 255, 0.05);
+  border: 2px solid rgb(107, 101, 101);
   background-clip: padding-box;
   box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03);
 }
