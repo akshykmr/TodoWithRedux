@@ -80,11 +80,21 @@ const Input = () => {
             <div
               className="card"
               id="list1"
-              style={{ backgroundColor: "#323232" ,borderColor:"#616464" , color:"white" }}
+              style={{
+                backgroundColor: "#323232",
+                borderColor: "#616464",
+                color: "white",
+              }}
             >
-              <div className="card-body py-4 px-4 px-md-5">
+              <div className="card-body py-md-4 px-md-4 px-md-5">
                 <div className="">
-                  <div className="card" style={{ backgroundColor: "#323232",borderColor:"#616464"}}>
+                  <div
+                    className="card"
+                    style={{
+                      backgroundColor: "#323232",
+                      borderColor: "#616464",
+                    }}
+                  >
                     <div className="card-body">
                       <div className="d-flex flex-row align-items-center text-light">
                         <input
@@ -103,7 +113,12 @@ const Input = () => {
                           onClick={handleAddTask}
                           type="button"
                         >
-                          <span className="button__text">Add Todo</span>
+                          <span
+                            style={{ fontSize: "12px" }}
+                            className="button__text"
+                          >
+                            Add Todo
+                          </span>
                           <span className="button__icon">
                             <svg
                               className="svg"
@@ -128,9 +143,12 @@ const Input = () => {
                 </div>
 
                 <hr className="my-4" />
-                <div className="form-check d-flex justify-content-between mb-2">
+                <div className="form-check d-flex justify-content-between mb-2 ">
                   <span className="d-flex flex-row">
                     <input
+                      style={{
+                        backgroundColor: "#323232",
+                      }}
                       className="form-check-input me-2"
                       type="checkbox"
                       value=""
@@ -143,13 +161,6 @@ const Input = () => {
                     <p className="small mb-0 me-2 text-light ">Select All</p>
                     <button
                       onClick={() => dispatch(removeAllTodo(selectedItems))}
-                      style={{
-                        height: "20px",
-                        width: "20px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
                       className="bin"
                     >
                       🗑
@@ -158,6 +169,11 @@ const Input = () => {
                   <span className="form-check d-flex justify-content-between align-items-center ">
                     <p className="small mb-0 me-2 text-light">Filter</p>
                     <select
+                      style={{
+                        background: "gray",
+                        border: "0",
+                        borderRadius: "5px",
+                      }}
                       className="select"
                       onChange={(e) => setFilterType(e.target.value)}
                     >
@@ -167,19 +183,28 @@ const Input = () => {
                     </select>
                   </span>
                 </div>
-                <div className="output" style={{ height:"300px", overflow:"auto"}}>
+                <div
+                  className="output"
+                 
+                >
+                <hr className="my-4" />
+
                   {filteredData.map((elem, index) => {
                     return (
                       <ul
                         key={elem.id}
-                        className="list-group list-group-horizontal rounded-0  "
-                        style={{ borderBottom: "1px solid",paddingLeft:"6px", paddingRight:"6px"}}
+                        className="list-group list-group-horizontal rounded-0 d-flex flex-column flex-md-row "
+                        style={{
+                          borderBottom: "1px solid",
+                          paddingLeft: "6px",
+                          paddingRight: "6px",
+                        }}
                       >
-                        <li className="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+                        <li className="list-group-item d-md-flex align-items-center ps-md-0 pe-md-3 py-1 rounded-0 border-0 bg-transparent d-none text-wrap">
                           <div className="form-check">
                             <input
-                            
-                              className="form-check-input me-0"
+                            style={{backgroundColor: "rgb(50, 50, 50)"}}
+                              className="form-check-input me-0 none "
                               type="checkbox"
                               value=""
                               id="flexCheckChecked1"
@@ -189,13 +214,20 @@ const Input = () => {
                             />
                           </div>
                         </li>
-                        <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                        <li
+                          
+                          className="first-list list-group-item px-md-3 py-md-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent"
+                        >
                           {editMode === index && elem.id === editedData.id ? (
                             <div className="input">
                               <input
                                 className="inputttt input-alt"
-                                style={{ width: "100%", border: "0",  backgroundColor: "#e5e5e0", paddingRight:"100px"}}
-                                
+                                style={{
+                                  width: "100%",
+                                  border: "0",
+                                  backgroundColor: "#323232",
+                                  paddingRight: "100px",
+                                }}
                                 type="text"
                                 name="inputTxt"
                                 placeholder="Edit..."
@@ -216,7 +248,7 @@ const Input = () => {
                               <span className="input-border input-border-alt"></span>
                               {editMode === index ? (
                                 <select
-                                  className="selectt"
+                                  className="selectt d-flex flex-nowrap"
                                   value={editedData.status}
                                   onChange={(e) => {
                                     const newStatus = e.target.value;
@@ -234,14 +266,16 @@ const Input = () => {
                               )}
                             </div>
                           ) : (
-                            <p className="lead text-light fw-normal mb-0">{elem.todo}</p>
+                            <p className=" p-text lead text-light justified-text fs-6 fw-normal mb-0">
+                              {elem.todo}
+                            </p>
                           )}
                         </li>
-                        <li className="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+                        <li className=" second-list list-group-item  pe-0 py-1 rounded-0 border-0 bg-transparent">
                           {editMode === index ? (
                             <>
                               {" "}
-                              <div className="d-flex flex-row justify-content-end mb-1">
+                              <div className="d-flex flex-row justify-content-end   mb-1">
                                 <a
                                   href="#!"
                                   className="text-info me-3 fs-4"
@@ -253,7 +287,7 @@ const Input = () => {
                                       setEditMode(false);
                                     }
                                   }}
-                                >
+                                > 
                                   {" "}
                                   <lord-icon
                                     src="https://cdn.lordicon.com/jvihlqtw.json"
@@ -292,7 +326,7 @@ const Input = () => {
                               </div>
                             </>
                           ) : (
-                            <div className="d-flex flex-row justify-content-end mb-1">
+                            <div className="d-flex flex-row  justify-content-end mb-1">
                               <a
                                 href="#!"
                                 className="text-info me-3 fs-4"
@@ -337,7 +371,7 @@ const Input = () => {
                               </a>
                             </div>
                           )}
-                          <div className="text-end text-muted d-flex flex-row gap-5">
+                          <div className="text-end text-muted d-flex flex-row gap-5 justify-content-end">
                             {!editMode ? (
                               <p
                                 className=" d-flex flex-row gap-2 align-items-center "
@@ -347,6 +381,7 @@ const Input = () => {
                                       ? "#bc1414"
                                       : "#178f17",
                                   fontSize: "14px",
+                                  width: "72.25px"
                                 }}
                               >
                                 <GrStatusGoodSmall />

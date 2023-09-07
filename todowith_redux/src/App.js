@@ -8,11 +8,11 @@ const App = () => {
     <div className="row d-flex justify-content-center  h-90">
       <div className="col-md-12 col-xl-10">
         <div className="card mask-custom">
-          <div className="card-body p-4 text-white">
+          <div className="card-body p-md-4 text-white">
             <div className="text-center ">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-todo-list/check1.webp"
                 alt="Check" width="60"/>
-              <h2 className="my-4">ToDo List</h2>
+              <h2 className="my-4">ToDo List With Redux</h2>
             </div>
             <div className="inputsection">
               <Input/>
